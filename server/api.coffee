@@ -51,9 +51,18 @@ module.exports = (router) ->
       dashboardController.get {userId: userId, _id: req.params.id}, (response) ->
         applyStatusCodesToResponse res, response, 200, response.dashboard
 
+#  router.post "/api/dashboards", (req, res, next) ->
+#    apiKeyRequest req.query.apiKey, res, (userId) ->
+#      dashboardController.create {name: req.body.name, userId: userId}, (response) ->
+#        applyStatusCodesToResponse res, response, 202, response.dashboard
+#===========
+#  Fix for https://github.com/Anephenix/dashku/issues/16
+#===========
   router.post "/api/dashboards", (req, res, next) ->
     apiKeyRequest req.query.apiKey, res, (userId) ->
-      dashboardController.create {name: req.body.name, userId: userId}, (response) ->
+      dashboard         = req.body
+      dashboard.userId  = userId      
+      dashboardController.create dashboard, (response) ->
         applyStatusCodesToResponse res, response, 202, response.dashboard
 
   router.put "/api/dashboards/:id", (req, res, next) ->
